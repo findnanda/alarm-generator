@@ -1,29 +1,31 @@
 package kata.alarm;
 
-public class Alarm implements IAlarm
-{
-    private final double lowThreshold = 17;
-    private final double highThreshold = 21;
+public class Alarm implements IAlarm {
+	private static final double LOW_THRESHOLD = 17;
+	private static final double HIGH_THRESHOLD = 21;
 
-    private Sensor sensor = new Sensor();
-    private boolean alarmOn = false;
-    private long alarmCount = 0;
+	private ISensor sensor;
+	private boolean alarmOn = false;
+	private long alarmCount = 0;
 
-    public void check()
-    {
-        double sensorValue = sensor.readValue();
+	//Dependency Injection via constructor to reduce the tight coupling and follow open/closed principle 
+	// which the code was violating.
+	public Alarm(ISensor sensor) {
+		this.sensor = sensor;
+	}
 
-        if (sensorValue < lowThreshold || highThreshold < sensorValue)
-        {
-            alarmOn = true;
-            alarmCount += 1;
-        } else {
-            alarmOn = false;
-        }
-    }
+	public void check() {
+		double sensorValue = sensor.readValue();
 
-    public boolean isAlarmOn()
-    {
-        return alarmOn; 
-    }
+		if (sensorValue < LOW_THRESHOLD || HIGH_THRESHOLD < sensorValue) {
+			alarmOn = true;
+			alarmCount += 1;
+		} else {
+			alarmOn = false;
+		}
+	}
+
+	public boolean isAlarmOn() {
+		return alarmOn;
+	}
 }
